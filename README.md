@@ -31,6 +31,7 @@ Requirement
 
 * 変換後のReSTファイルは `summary` プラグインが必要
 * 画像ファイルを `/path/to/pelican/content/images/YYYY/MM/DD` 配下に移動するので `STATIC_PATH` の設定が必要
+* 必要な場合はTinkererと同様に `content/YYYY/MM/DD/filename.rst` でメタデータを認識するように設定変更
 
 ### 手順
 
@@ -46,11 +47,23 @@ Requirement
 * `pelicanconf.py` 追記内容
 
     ```python
+    ## ファイルパスからメタデータの設定
+    # ----------------------------------------
+    USE_FOLDER_AS_CATEGORY = False
+    ## Tinkerer 同様にファイルパスから日付、HTMLファイル名を取得
+    PATH_METADATA = '(?P<date>\d{4}/\d{2}/\d{2})/(?P<slug>[^.]+).*'
+    ## HTML生成時の出力先とURL
+    ARTICLE_URL = '{date:%Y}/{date:%m}/{date:%d}/{slug}.html'
+    ARTICLE_SAVE_AS = '{date:%Y}/{date:%m}/{date:%d}/{slug}.html'
+
+
     ## 画像ファイル向け
+    # ----------------------------------------
     STATIC_PATHS = [ ..., 'images', ]
     EXTRA_PATH_METADATA = { 'images': { 'path': 'images' } }
 
     ## プラグイン追加
+    # ----------------------------------------
     PLUGIN_PATHS = [ 'pelican-plugins' ]
     PLUGINS = [ ..., 'summary' ]
     ```
